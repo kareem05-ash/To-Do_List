@@ -43,8 +43,8 @@ If you want to swap 2 tasks write (swap)\n""").lower()
 # Functions
 # Add a new task Function
 def add():
-    task = [(input("Enter the task: "))]
-    task.append((input("Enter the dead line: ")))
+    task = [(input("Enter Task Name: "))]
+    task.append((input("Enter Task Due Date: ")))
     task.append(not_finished_status)
     tasks.append(task)
     
@@ -56,9 +56,10 @@ def show():
         print()     # print new line
         count = 1
         for task in tasks: 
-            print(f"Task({count}): {task[0]}")
+            print(f"----------- Task({count} -----------")
+            print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
-            print(f"status: {task[2]}")
+            print(f"Status: {task[2]}")
             count += 1
             print()     # print new line
 
@@ -70,7 +71,8 @@ def show_task():
         if task_number <= len(tasks):
             valid_task_number = True
             task = tasks[task_number - 1]
-            print(f"Task({task_number}): {task[0]}")
+            print(f"----------- Task({task_number} -----------")
+            print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
         else:
