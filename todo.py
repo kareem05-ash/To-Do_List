@@ -25,16 +25,18 @@ finished_status = "Finished"
 def user_interface():
     valid_choice = False
     while not valid_choice: 
-        choice = input("""Choose Operation
-If you want to show your tasks, write (show)
-If you want to show a specific task, write (show_task)
-If you want to add a task, write (add)
-If you want to finish a task, write (finish)
-If you want to unfinish a task, write (unfinish)
-If you want to delete a specific task, write (delete)
-If you want to edit a specific task, write (edit)
-If you want to swap 2 tasks write (swap)\n""").lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap"): 
+        choice = input("""
+-------------------- Choose Operation --------------------
+Write (exit)        if you want to exit from the program
+Write (show)        if you want to show your tasks 
+Write (show_task)   if you want to show a specific task 
+Write (add)         if you want to add a task 
+Write (finish)      if you want to finish a task 
+Write (unfinish)    if you want to unfinish a task 
+Write (delete)      if you want to delete a specific task 
+Write (edit)        if you want to edit a specific task 
+Write (swap)        if you want to swap 2 tasks\n""").lower()
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -48,20 +50,26 @@ def add():
     task = [(input("Enter Task Name: "))]
     task.append((input("Enter Task Due Date: ")))
     task.append(not_finished_status)
+    decision = input("Do you want to add a NOTE for this task? (y/n): ")
+    if decision == 'y': 
+        task.append(input("Enter NOTE: "))
+    else: 
+        task.append("NONE")
     tasks.append(task)
-    
+
 # Show all tasks Funtion
 def show():
     if not tasks:
-        print("There is no any task assigned.\nChoose method (add) to asign tasks first.")
+        print("There are no assigned tasks.\nChoose method (add) to asign tasks first.")
     else:
         print()     # print new line
         count = 1
         for task in tasks: 
-            print(f"----------- Task({count} -----------")
+            print(f"----------- Task({count}) -----------")
             print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
+            print(f"NOTE: {task[3]}")
             count += 1
             print()     # print new line
 
@@ -73,10 +81,13 @@ def show_task():
         if task_number <= len(tasks):
             valid_task_number = True
             task = tasks[task_number - 1]
-            print(f"----------- Task({task_number} -----------")
+            print()     # print new line
+            print(f"----------- Task({task_number}) -----------")
             print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
+            print(f"NOTE: {task[3]}")
+            print()     # print new line
         else:
             valid_task_number = False
             print(f"Sorry, the entered task number({task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -118,7 +129,7 @@ def unfinish():
             if tasks[unfinished_task_number - 1][2] == not_finished_status:
                 print(f"Task({unfinished_task_number}) is already unfinished: {tasks[unfinished_task_number - 1]}")
             else:
-                tasks[unfinished_task_number - 1][2] = finished_status
+                tasks[unfinished_task_number - 1][2] = not_finished_status
                 print(f"The unfinished task: {tasks[unfinished_task_number - 1]}")
             break
         else: 
@@ -133,10 +144,12 @@ def edit():
             task = tasks[edited_task_number - 1]
             print(f"Task({edited_task_number}): {task[0]}")
             print(f"Due Date: {task[1]}")
-            print(f"Status: {task[2]}\n")
+            print(f"Status: {task[2]}")
+            print(f"NOTE: {task[3]}\n")
             task[0] = input("Edit Task Name: ")
             task[1] = input("Edit Task Due Date: ")
             task[2] = not_finished_status
+            task[3] = input("Edit Task NOTE: ")
             break
         else: 
             print(f"Sorry, the entered task number({edited_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -160,8 +173,7 @@ def swap():
             print(f"Sorry, the entered task bumbers ({first_task_number}), ({second_task_number}) are in-valid. Try {len(tasks)} or less")
 
 # Programe Implementation
-exit = 0
-while not exit: 
+while True: 
     choice =user_interface()
     if choice == "show": 
         show()
@@ -179,7 +191,8 @@ while not exit:
         edit()
     elif choice == "swap": 
         swap()
+    elif choice == "exit":
+        break
     else:
         print(f"XXXXXXX Error XXXXXXX: Invalid Choice = {choice}")
-    exit = int(input("If you want to exit the program, write (1). Else, write (0): "))
 print("Good, Buy!")
