@@ -195,4 +195,4 @@ while True:
         break
     else:
         print(f"XXXXXXX Error XXXXXXX: Invalid Choice = {choice}")
-print("Good, Buy!")
+print("Goodbuy!")
