@@ -7,26 +7,32 @@
 # Add new task
 # Finish a specific task acording to its index
 # Delete a specific task acording to its index
+# Edit a specific task according to its index
 # Show a specific task acording to its index
-# Show the current task list with status (finished or not finished)
+# Show the current task list 
+# Swap two tasks (Configurable Priority)
+# Store task list in an external TEXT file
 
 
-# Tasks List
-tasks = []
-
-# User Interface
 print("Hello, World!")
+tasks = []  # Task List
+not_finished_status = "Not Finished"
+
+finished_status = "Finished"
+
 # User Interface Funtion
 def user_interface():
     valid_choice = False
-    while valid_choice == False: 
+    while not valid_choice: 
         choice = input("""Choose Operation
 If you want to show your tasks, write (show)
 If you want to show a specific task, write (show_task)
 If you want to add a task, write (add)
 If you want to finish a task, write (finish)
-If you want to delete a specific task, write (delete)\n""").lower()
-        if choice in ("show", "add", "delete", "finish", "show_task"): 
+If you want to delete a specific task, write (delete)
+If you want to edit a specific task, write (edit)
+If you want to swap 2 tasks write (swap)\n""").lower()
+        if choice in ("show", "add", "delete", "finish", "show_task", "edit", "swap"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -39,7 +45,7 @@ If you want to delete a specific task, write (delete)\n""").lower()
 def add():
     task = [(input("Enter the task: "))]
     task.append((input("Enter the dead line: ")))
-    task.append("Not Finished")
+    task.append(not_finished_status)
     tasks.append(task)
     
 # Show all tasks Funtion
@@ -91,15 +97,49 @@ def finish():
         finished_task_number = int(input("Enter the task(to be finished) number: "))
         if finished_task_number <= len(tasks):
             valid_task_number = True
-            if tasks[finished_task_number - 1][2] == "Finished":
+            if tasks[finished_task_number - 1][2] == finished_status:
                 print(f"Task({finished_task_number}) is already finished: {tasks[finished_task_number - 1]}")
             else:
-                tasks[finished_task_number - 1][2] = "Finished"
+                tasks[finished_task_number - 1][2] = finished_status
                 print(f"The finished task: {tasks[finished_task_number - 1]}")
         else:
             valid_task_number = False
             print(f"Sorry, the entered task number({finished_task_number}) is in-valid. Try {len(tasks)} or less.")
 
+# Edit a specific task Function
+def edit():
+    while True:
+        edited_task_number = int(input("Enter the task(to be edited) number: "))
+        if edited_task_number <= len(tasks): 
+            print("The task to be edited:")
+            task = tasks[edited_task_number - 1]
+            print(f"Task({edited_task_number}): {task[0]}")
+            print(f"Due Date: {task[1]}")
+            print(f"Status: {task[2]}\n")
+            task[0] = input("Edit Task Name: ")
+            task[1] = input("Edit Task Due Date: ")
+            task[2] = not_finished_status
+            break
+        else: 
+            print(f"Sorry, the entered task number({edited_task_number}) is in-valid. Try {len(tasks)} or less.")
+
+# Swap 2 tasks Funciton
+def swap():
+    while True: 
+        first_task_number = int(input("Enter the first task(to be swapped) number: "))
+        second_task_number = int(input("Enter the second task(to be swapped) number: "))
+        if first_task_number == second_task_number: 
+            print(f"Sorry, you've entered the same number for both. task({first_task_number}), task({second_task_number}). Try different 2 numbers up to {len(tasks)}")
+        elif first_task_number <= len(tasks) and second_task_number <= len(tasks): 
+            # temporary list stores the first task
+            temp = tasks[first_task_number - 1]     
+            # swapping
+            tasks[first_task_number - 1] = tasks[second_task_number - 1]
+            tasks[second_task_number - 1] = temp
+            print("Swapping's done successfully")
+            break
+        else: 
+            print(f"Sorry, the entered task bumbers ({first_task_number}), ({second_task_number}) are in-valid. Try {len(tasks)} or less")
 
 # Programe Implementation
 exit = 0
@@ -115,6 +155,10 @@ while not exit:
         finish()
     elif choice == "delete": 
         delete()
+    elif choice == "edit": 
+        edit()
+    elif choice == "swap": 
+        swap()
     else:
         print(f"XXXXXXX Error XXXXXXX: Invalid Choice = {choice}")
     exit = int(input("If you want to exit the program, write (1). Else, write (0): "))
