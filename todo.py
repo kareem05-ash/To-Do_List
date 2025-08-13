@@ -6,6 +6,7 @@
 # ---------------- Program Features ---------------- #
 # Add new task
 # Finish a specific task acording to its index
+# Unfinishe a specific task according to its index
 # Delete a specific task acording to its index
 # Edit a specific task according to its index
 # Show a specific task acording to its index
@@ -29,10 +30,11 @@ If you want to show your tasks, write (show)
 If you want to show a specific task, write (show_task)
 If you want to add a task, write (add)
 If you want to finish a task, write (finish)
+If you want to unfinish a task, write (unfinish)
 If you want to delete a specific task, write (delete)
 If you want to edit a specific task, write (edit)
 If you want to swap 2 tasks write (swap)\n""").lower()
-        if choice in ("show", "add", "delete", "finish", "show_task", "edit", "swap"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -108,6 +110,20 @@ def finish():
             valid_task_number = False
             print(f"Sorry, the entered task number({finished_task_number}) is in-valid. Try {len(tasks)} or less.")
 
+# Unfinishe a specific task Funciton
+def unfinish(): 
+    while True: 
+        unfinished_task_number = int(input("Enter the task(to be unfinished) number: "))
+        if unfinished_task_number <= len(tasks): 
+            if tasks[unfinished_task_number - 1][2] == not_finished_status:
+                print(f"Task({unfinished_task_number}) is already unfinished: {tasks[unfinished_task_number - 1]}")
+            else:
+                tasks[unfinished_task_number - 1][2] = finished_status
+                print(f"The unfinished task: {tasks[unfinished_task_number - 1]}")
+            break
+        else: 
+            print(f"Sorry, the entered number ({unfinished_task_number}) is in-valid. Try {len(tasks)} or less")
+
 # Edit a specific task Function
 def edit():
     while True:
@@ -155,6 +171,8 @@ while not exit:
         add()
     elif choice == "finish": 
         finish()
+    elif choice == "unfinish": 
+        unfinish()
     elif choice == "delete": 
         delete()
     elif choice == "edit": 
