@@ -12,7 +12,8 @@
 # Show a specific task acording to its index
 # Show the current task list 
 # Swap two tasks (Configurable Priority)
-# Store task list in an external TEXT file
+# Save changes to an external file (tasks.txt)
+# Load task list from the file (tasks.txt)
 
 
 print("Hello, World!")
@@ -35,8 +36,9 @@ Write (finish)      if you want to finish a task
 Write (unfinish)    if you want to unfinish a task 
 Write (delete)      if you want to delete a specific task 
 Write (edit)        if you want to edit a specific task 
-Write (swap)        if you want to swap 2 tasks\n""").lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit"): 
+Write (swap)        if you want to swap 2 tasks
+""").lower()
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit",): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -172,6 +174,29 @@ def swap():
         else: 
             print(f"Sorry, the entered task bumbers ({first_task_number}), ({second_task_number}) are in-valid. Try {len(tasks)} or less")
 
+
+# # File Path to project folder
+# import os
+# filename = os.path.join(os.path.dirname(__file__), "tasks.txt")
+
+# # Load from (tasks.txt) Function
+# def load(): 
+#     try: 
+#         with open(filename, "r") as file:
+#             for line in file:
+#                 task = line.strip().split("|")
+#             tasks.append(task)
+#     except FileNotFoundError:
+#         pass
+
+
+# # Save changes to (tasks.txt) Function
+# def save(): 
+#     with open(filename, "w") as file: 
+#         for task in tasks:
+#             file.write("|".join(task) + "\n")
+
+
 # Programe Implementation
 while True: 
     choice =user_interface()
@@ -191,6 +216,10 @@ while True:
         edit()
     elif choice == "swap": 
         swap()
+    # elif choice == "load": 
+    #     load()
+    # elif choice == "save":
+    #     save()
     elif choice == "exit":
         break
     else:
