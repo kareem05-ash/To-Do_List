@@ -37,8 +37,10 @@ Write (unfinish)    if you want to unfinish a task
 Write (delete)      if you want to delete a specific task 
 Write (edit)        if you want to edit a specific task 
 Write (swap)        if you want to swap 2 tasks
+Write (save)        if you want to save task list to file (tasks.txt)
+Write (load)        if you want to load task list from file (tasks.txt)
 """).lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit",): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "save", "load"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -175,29 +177,32 @@ def swap():
             print(f"Sorry, the entered task bumbers ({first_task_number}), ({second_task_number}) are in-valid. Try {len(tasks)} or less")
 
 
-# # File Path to project folder
-# import os
-# filename = os.path.join(os.path.dirname(__file__), "tasks.txt")
-
-# # Load from (tasks.txt) Function
-# def load(): 
-#     try: 
-#         with open(filename, "r") as file:
-#             for line in file:
-#                 task = line.strip().split("|")
-#             tasks.append(task)
-#     except FileNotFoundError:
-#         pass
+# Save tasks into external file Funciotn
+def save_tasks(): 
+    with open("tasks.txt", "w") as file: 
+        for task in tasks: 
+            task_line = "|".join(task)
+            file.write(f"{task_line}\n")
+    print("Tasks saved successfully to (tasks.txt)")
 
 
-# # Save changes to (tasks.txt) Function
-# def save(): 
-#     with open(filename, "w") as file: 
-#         for task in tasks:
-#             file.write("|".join(task) + "\n")
+# Load task list from (tasks.txt) Function
+def load_tasks():
+    try:
+        with open("tasks.txt", "r") as file:
+            for line in file: 
+                task = line.split("|")
+                tasks.append(task)
+        print("Tasks loaded successfully from (tasks.txt)")
+    except FileExistsError:
+        print("No existing tasks file found. Starting with empty task list.")
+    except Exception as e:
+        print(f"Error loading tasks: {e}")
 
 
-# Programe Implementation
+
+# Main Programe Implementation
+load_tasks() # load task list with the saved tasks in (tasks.txt)
 while True: 
     choice =user_interface()
     if choice == "show": 
@@ -216,10 +221,10 @@ while True:
         edit()
     elif choice == "swap": 
         swap()
-    # elif choice == "load": 
-    #     load()
-    # elif choice == "save":
-    #     save()
+    elif choice == "save":
+        save_tasks()
+    elif choice == "load": 
+        load_tasks()
     elif choice == "exit":
         break
     else:
