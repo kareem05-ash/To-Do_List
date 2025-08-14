@@ -39,8 +39,9 @@ Write (edit)        if you want to edit a specific task
 Write (swap)        if you want to swap 2 tasks
 Write (save)        if you want to save task list to file (tasks.txt)
 Write (load)        if you want to load task list from file (tasks.txt)
+Write (rst)         if you want to reset task file (tasks.txt)
 """).lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "save", "load"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "save", "load", "rst"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -200,6 +201,20 @@ def load_tasks():
         print(f"Error loading tasks: {e}")
 
 
+# Reset task file Function
+def rst():
+    try:
+        with(open("tasks.txt", "w")) as file:
+            file.truncate(0)
+            print("Reset tasks.txt: Done")
+            global tasks
+            tasks = []
+    except FileNotFoundError: 
+        print("No existing tasks file found. Starting with empty task list.")
+    except Exception as e:
+        print(f"Error resetting task file: {e}")
+
+
 
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
@@ -225,6 +240,8 @@ while True:
         save_tasks()
     elif choice == "load": 
         load_tasks()
+    elif choice == "rst": 
+        rst()
     elif choice == "exit":
         break
     else:
