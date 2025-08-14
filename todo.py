@@ -67,16 +67,14 @@ def show():
     if not tasks:
         print("There are no assigned tasks.\nChoose method (add) to asign tasks first.")
     else:
-        print()     # print new line
         count = 1
         for task in tasks: 
-            print(f"----------- Task({count}) -----------")
+            print(f"\n----------- Task({count}) -----------")
             print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
             print(f"NOTE: {task[3]}")
             count += 1
-            print()     # print new line
 
 # Show a specific task Funciton
 def show_task(): 
@@ -86,17 +84,16 @@ def show_task():
         if task_number <= len(tasks):
             valid_task_number = True
             task = tasks[task_number - 1]
-            print()     # print new line
-            print(f"----------- Task({task_number}) -----------")
+            print(f"\n----------- Task({task_number}) -----------")
             print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
             print(f"NOTE: {task[3]}")
-            print()     # print new line
         else:
             valid_task_number = False
             print(f"Sorry, the entered task number({task_number}) is in-valid. Try {len(tasks)} or less.")
 
+            
 # Delete a specific task Function
 def delete():  
     valid_task_number = False
