@@ -36,13 +36,15 @@ Write (show)        if you want to show your tasks
 Write (show_task)   if you want to show a specific task 
 Write (add)         if you want to add a task 
 Write (finish)      if you want to finish a task 
+Write (finish_all)  if you want to finish all tasks
 Write (unfinish)    if you want to unfinish a task 
+Write (unfinish_all)if you want to unfinish all tasks
 Write (delete)      if you want to delete a specific task 
 Write (edit)        if you want to edit a specific task 
 Write (swap)        if you want to swap 2 tasks
 Write (rst)         if you want to reset task file (tasks.txt)
 """).strip().lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -222,11 +224,14 @@ def rst():
 
 # Finish all tasks Function
 def finish_all():
-
+    for task_num in range(len(tasks)):
+        tasks[task_num-1][2] = finished_status
+    print("All tasks has been finished")
 
 # Unfinish all tasks Function
 def unfinish_all():
-    
+    for task_num in range(len(tasks)):
+        tasks[task_num-1][2] = not_finished_status
 
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
@@ -255,6 +260,12 @@ while True:
         save_tasks()
     elif choice == "rst": 
         rst()
+    elif choice == "finish_all":
+        finish_all()
+        save_tasks()
+    elif choice == "unfinish_all":
+        unfinish_all()
+        save_tasks()
     elif choice == "exit":
         break
     else:
