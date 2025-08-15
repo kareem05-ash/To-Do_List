@@ -6,14 +6,15 @@
 # ---------------- Program Features ---------------- #
 # Add new task
 # Finish a specific task acording to its index
+# Finish all tasks
 # Unfinishe a specific task according to its index
+# Unfinish all tasks
 # Delete a specific task acording to its index
 # Edit a specific task according to its index
 # Show a specific task acording to its index
 # Show the current task list 
 # Swap two tasks (Configurable Priority)
-# Auto save to (tasks.txt) or manual
-# Load task list from the file (tasks.txt)
+# Auto save to (tasks.txt)
 # Automatick loading tasks from (tasks.txt)
 
 
@@ -219,6 +220,13 @@ def rst():
         print(f"Error resetting task file: {e}")
 
 
+# Finish all tasks Function
+def finish_all():
+
+
+# Unfinish all tasks Function
+def unfinish_all():
+    
 
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
