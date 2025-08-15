@@ -232,6 +232,7 @@ def finish_all():
 def unfinish_all():
     for task_num in range(len(tasks)):
         tasks[task_num-1][2] = not_finished_status
+    print("All tasks has been unfinished")
 
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
