@@ -12,8 +12,10 @@
 # Show a specific task acording to its index
 # Show the current task list 
 # Swap two tasks (Configurable Priority)
-# Save changes to an external file (tasks.txt)
+# Auto save to (tasks.txt) or manual
 # Load task list from the file (tasks.txt)
+# Automatick loading tasks from (tasks.txt)
+
 
 
 print("Hello, World!")
@@ -37,11 +39,9 @@ Write (unfinish)    if you want to unfinish a task
 Write (delete)      if you want to delete a specific task 
 Write (edit)        if you want to edit a specific task 
 Write (swap)        if you want to swap 2 tasks
-Write (save)        if you want to save task list to file (tasks.txt)
-Write (load)        if you want to load task list from file (tasks.txt)
 Write (rst)         if you want to reset task file (tasks.txt)
-""").lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "save", "load", "rst"): 
+""").strip().lower()
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst"): 
             valid_choice = True
             print(f"Your Choice: {choice}")
         else: 
@@ -102,6 +102,9 @@ def delete():
         if deleted_task_number <= len(tasks):
             valid_task_number = True
             print(f"The deleted task: {tasks.pop(deleted_task_number - 1)}")
+            with(open("tasks.txt", "w")) as file:
+                file.truncate(0)
+            save_tasks()
         else: 
             valid_task_number = False
             print(f"Sorry, the entered task number({deleted_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -151,7 +154,11 @@ def edit():
             task[0] = input("Edit Task Name: ")
             task[1] = input("Edit Task Due Date: ")
             task[2] = not_finished_status
-            task[3] = input("Edit Task NOTE: ")
+            decision = input("Do you want to add a NOTE for this task? (y/n): ")
+            if decision == 'y': 
+                task[3] = (input("Enter NOTE: "))
+            else: 
+                task.append("NONE")
             break
         else: 
             print(f"Sorry, the entered task number({edited_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -223,20 +230,21 @@ while True:
         show_task()
     elif choice == "add": 
         add()
+        save_tasks()
     elif choice == "finish": 
         finish()
+        save_tasks()
     elif choice == "unfinish": 
         unfinish()
+        save_tasks()
     elif choice == "delete": 
         delete()
     elif choice == "edit": 
         edit()
+        save_tasks()
     elif choice == "swap": 
         swap()
-    elif choice == "save":
         save_tasks()
-    elif choice == "load": 
-        load_tasks()
     elif choice == "rst": 
         rst()
     elif choice == "exit":
