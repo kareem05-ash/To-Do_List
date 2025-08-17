@@ -18,6 +18,11 @@
 # Automatick loading tasks from (tasks.txt)
 # Add a NOTE to an existing task
 
+#               Not added yet
+# 2 Counters: first one for finished tasks, second one for unfinished tasks
+# Add status: to show number of finished tasks vs unfinished tasks out of number of all tasks
+# Categorize shown tasks: finished & unfinished
+
 
 print("Hello, World!")
 tasks = []  # Task List
@@ -168,7 +173,7 @@ def edit():
                     task[3] = (input("Enter NOTE: "))
                     break
                 elif decision == 'n': 
-                    task.append("NONE")
+                    task[3] = "NONE"
                     break
                 else:
                     print("Sorry, please enter a vlaid choice!")
