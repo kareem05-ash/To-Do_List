@@ -81,17 +81,16 @@ def show():
 
 # Show a specific task Funciton
 def show_task(): 
-    valid_task_number = False
-    while not valid_task_number:
+    while True:
         task_number = int(input("Enter the task(to be shown) mumber: "))
         if task_number <= len(tasks):
-            valid_task_number = True
             task = tasks[task_number - 1]
             print(f"\n----------- Task({task_number}) -----------")
             print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
             print(f"NOTE: {task[3]}")
+            break
         else:
             valid_task_number = False
             print(f"Sorry, the entered task number({task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -115,18 +114,16 @@ def delete():
 
 # Finish a specific task Funciton
 def finish(): 
-    valid_task_number = False
-    while not valid_task_number:
+    while True:
         finished_task_number = int(input("Enter the task(to be finished) number: "))
         if finished_task_number <= len(tasks):
-            valid_task_number = True
             if tasks[finished_task_number - 1][2] == finished_status:
                 print(f"Task({finished_task_number}) is already finished: {tasks[finished_task_number - 1]}")
             else:
                 tasks[finished_task_number - 1][2] = finished_status
-                print(f"The finished task: {tasks[finished_task_number - 1]}")
+                print(f"The finished task: {tasks[finished_task_number - 1]}, length = {len(tasks[finished_task_number - 1])}")
+            break
         else:
-            valid_task_number = False
             print(f"Sorry, the entered task number({finished_task_number}) is in-valid. Try {len(tasks)} or less.")
 
 # Unfinishe a specific task Funciton
@@ -154,6 +151,7 @@ def edit():
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
             print(f"NOTE: {task[3]}\n")
+            task = []
             task[0] = input("Edit Task Name: ")
             task[1] = input("Edit Task Due Date: ")
             task[2] = not_finished_status
@@ -195,18 +193,31 @@ def save_tasks():
 
 
 # Load task list from (tasks.txt) Function
+# def load_tasks():
+#     try:
+#         with open("tasks.txt", "r") as file:
+#             for line in file: 
+#                 task = line.split("|")
+#                 tasks.append(task)
+#         print("Tasks loaded successfully from (tasks.txt)")
+#     except FileExistsError:
+#         print("No existing tasks file found. Starting with empty task list.")
+#     except Exception as e:
+#         print(f"Error loading tasks: {e}")
 def load_tasks():
     try:
         with open("tasks.txt", "r") as file:
-            for line in file: 
+            for line in file:
+                line = line.strip()  # Remove leading/trailing whitespace
+                if not line:  # Skip empty lines
+                    continue
                 task = line.split("|")
                 tasks.append(task)
         print("Tasks loaded successfully from (tasks.txt)")
-    except FileExistsError:
+    except FileNotFoundError:  # Changed from FileExistsError to FileNotFoundError
         print("No existing tasks file found. Starting with empty task list.")
     except Exception as e:
         print(f"Error loading tasks: {e}")
-
 
 # Reset task file Function
 def rst():
