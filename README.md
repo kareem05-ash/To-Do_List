@@ -7,15 +7,15 @@ The application supports essential task management features such as adding deadl
 
 ## 📚 Table of Contents (TOC)
 
-- [Folder Structure](#folder-structure)
-- [App Features](#app-features)
-- [CLI Screenshots](#cli-screenshots)
-- [App Installation](#app-installation)
-- [Future Work](#future-work)
-- [Author](#author)
-- [LICENSE](#license)
-- [Contributing](#contributing)
-- [NOTEs](#notes)
+- [Folder Structure](#-folder-structure)
+- [App Features](#-app-features)
+- [CLI Screenshots](#-cli-screenshots)
+- [App Installation](#-app-installation)
+- [Future Work](#-future-work)
+- [Author](#-author)
+- [LICENSE](#-license)
+- [Contributing](#-contributing)
+- [NOTEs](#-notes)
 
 ---         
 
