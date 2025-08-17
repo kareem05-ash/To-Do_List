@@ -21,6 +21,7 @@
 # Add status: to show number of finished tasks vs unfinished tasks out of number of all tasks
 # Categorize shown tasks: finished & unfinished
 # Search for a task using a keyword in task (Name, Due Date, Status, or NOTE)
+# Show the next Not Finished task (highest priority)
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------- Hello, World! --------------------
@@ -41,6 +42,7 @@ Write (exit)        if you want to exit from the program
 Write (show)        if you want to show your tasks 
 Write (status)      if you want to show number of all, finished, and unfinished tasks
 Write (show_task)   if you want to show a specific task 
+Write (next)        if you want to show the next Not Finished task (to be done first)
 Write (add)         if you want to add a task 
 Write (add_note)    if you want to add a NOTE to an existing task
 Write (edit_note)   if you want to edit the NOTE of an existing task
@@ -54,7 +56,7 @@ Write (swap)        if you want to swap 2 tasks
 Write (search)      if you want to search for a task using keyword in task (Name, Due Date, Status, or NOTE)
 Write (rst)         if you want to reset task file (tasks.txt)
 """).strip().lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search", "next"): 
             break
         else: 
             print("Invalid operation. Please, try again")
@@ -110,18 +112,38 @@ def show():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Show a specific task Funciton
 def show_task(): 
-    while True:
-        task_number = valid_number("Enter the task(to be shown) mumber: ")  # asking a valid number from the user
-        if task_number <= int(len(tasks)):
-            task = tasks[task_number - 1]
-            print(f"\n----------- Task({task_number}) -----------")
-            print(f"Name: {task[0]}")
-            print(f"Due Date: {task[1]}")
-            print(f"Status: {task[2]}")
-            print(f"NOTE: {task[3]}")
-            break
-        else:
-            print(f"Sorry, the entered task number({task_number}) is in-valid. Try {len(tasks)} or less.")
+    if not tasks:
+        print("There are no assigned tasks.\nChoose method (add) to asign tasks first.")
+    else:
+        while True:
+            task_number = valid_number("Enter the task(to be shown) mumber: ")  # asking a valid number from the user
+            if task_number <= int(len(tasks)):
+                task = tasks[task_number - 1]
+                print(f"\n----------- Task({task_number}) -----------")
+                print(f"Name: {task[0]}")
+                print(f"Due Date: {task[1]}")
+                print(f"Status: {task[2]}")
+                print(f"NOTE: {task[3]}")
+                break
+            else:
+                print(f"Sorry, the entered task number({task_number}) is in-valid. Try {len(tasks)} or less.")
+
+# -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
+# Show next task Function
+def show_next(): 
+    if not tasks:
+        print("There are no assigned tasks.\nChoose method (add) to asign tasks first.")
+    else:
+        count = 1
+        for task in tasks:
+            if task[2] == not_finished_status: 
+                print(f"\n----------- Task({count}) -----------")
+                print(f"Name: {task[0]}")
+                print(f"Due Date: {task[1]}")
+                print(f"Status: {task[2]}")
+                print(f"NOTE: {task[3]}")
+                break
+            count += 1
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # Delete a specific task Function
@@ -431,6 +453,8 @@ while True:
         status()
     elif choice == "search": 
         search()
+    elif choice == "next":
+        show_next()
     elif choice == "exit":
         break
     else:
