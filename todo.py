@@ -17,27 +17,28 @@
 # Auto save to (tasks.txt)
 # Automatick loading tasks from (tasks.txt)
 # Add a NOTE to an existing task
-
-#               Not added yet
 # 2 Counters: first one for finished tasks, second one for unfinished tasks
 # Add status: to show number of finished tasks vs unfinished tasks out of number of all tasks
 # Categorize shown tasks: finished & unfinished
 
-
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# -------------------- Hello, World! --------------------
 print("Hello, World!")
 tasks = []  # Task List
+finished_count = 0
+unfinished_count = 0
 not_finished_status = "Not Finished"
 finished_status = "Finished"
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # User Interface Funtion
 def user_interface():
-    valid_choice = False
-    while not valid_choice: 
+    while True: 
         choice = input("""
 -------------------- Choose Operation --------------------
 Write (exit)        if you want to exit from the program
 Write (show)        if you want to show your tasks 
+Write (status)      if you want to show number of all, finished, and unfinished tasks
 Write (show_task)   if you want to show a specific task 
 Write (add)         if you want to add a task 
 Write (add_note)    if you want to add a NOTE to an existing task
@@ -51,9 +52,8 @@ Write (edit)        if you want to edit a specific task
 Write (swap)        if you want to swap 2 tasks
 Write (rst)         if you want to reset task file (tasks.txt)
 """).strip().lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note"): 
-            valid_choice = True
-            print(f"Your Choice: {choice}")
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status"): 
+            break
         else: 
             print("Invalid operation. Please, try again")
     return choice
@@ -61,6 +61,8 @@ Write (rst)         if you want to reset task file (tasks.txt)
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Add a new task Function
 def add():
+    global unfinished_count
+    unfinished_count += 1
     task = [(input("Enter Task Name: "))]
     task.append((input("Enter Task Due Date: ")))
     task.append(not_finished_status)
@@ -82,13 +84,25 @@ def show():
     if not tasks:
         print("There are no assigned tasks.\nChoose method (add) to asign tasks first.")
     else:
+        print("==================== Finished Tasks ====================")
         count = 1
         for task in tasks: 
-            print(f"\n----------- Task({count}) -----------")
-            print(f"Name: {task[0]}")
-            print(f"Due Date: {task[1]}")
-            print(f"Status: {task[2]}")
-            print(f"NOTE: {task[3]}")
+            if task[2] == finished_status:
+                print(f"\n----------- Task({count}) -----------")
+                print(f"Name: {task[0]}")
+                print(f"Due Date: {task[1]}")
+                print(f"Status: {task[2]}")
+                print(f"NOTE: {task[3]}")
+            count += 1
+        print("==================== Not Finished Tasks ====================")
+        count = 1
+        for task in tasks: 
+            if task[2] == not_finished_status:
+                print(f"\n----------- Task({count}) -----------")
+                print(f"Name: {task[0]}")
+                print(f"Due Date: {task[1]}")
+                print(f"Status: {task[2]}")
+                print(f"NOTE: {task[3]}")
             count += 1
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -105,7 +119,6 @@ def show_task():
             print(f"NOTE: {task[3]}")
             break
         else:
-            valid_task_number = False
             print(f"Sorry, the entered task number({task_number}) is in-valid. Try {len(tasks)} or less.")
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
@@ -118,6 +131,11 @@ def delete():
             with(open("tasks.txt", "w")) as file:
                 file.truncate(0)
             save_tasks()
+            global finished_count, unfinished_count
+            if is_finished(deleted_task_number):
+                finished_count -= 1
+            else:
+                unfinished_count -= 1
             break
         else: 
             print(f"Sorry, the entered task number({deleted_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -128,11 +146,14 @@ def finish():
     while True:
         finished_task_number = valid_number("Enter the task(to be finished) number: ")
         if finished_task_number <= len(tasks):
+            global finished_count, unfinished_count
             if tasks[finished_task_number - 1][2] == finished_status:
                 print(f"Task({finished_task_number}) is already finished: {tasks[finished_task_number - 1]}")
             else:
                 tasks[finished_task_number - 1][2] = finished_status
                 print(f"The finished task: {tasks[finished_task_number - 1]}, length = {len(tasks[finished_task_number - 1])}")
+            finished_count += 1
+            unfinished_count -= 1
             break
         else:
             print(f"Sorry, the entered task number({finished_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -143,11 +164,14 @@ def unfinish():
     while True: 
         unfinished_task_number = valid_number("Enter the task(to be unfinished) number: ")
         if unfinished_task_number <= len(tasks): 
+            global finished_count, unfinished_count
             if tasks[unfinished_task_number - 1][2] == not_finished_status:
                 print(f"Task({unfinished_task_number}) is already unfinished: {tasks[unfinished_task_number - 1]}")
             else:
                 tasks[unfinished_task_number - 1][2] = not_finished_status
                 print(f"The unfinished task: {tasks[unfinished_task_number - 1]}")
+            finished_count -= 1
+            unfinished_count += 1
             break
         else: 
             print(f"Sorry, the entered number ({unfinished_task_number}) is in-valid. Try {len(tasks)} or less")
@@ -177,6 +201,10 @@ def edit():
                     break
                 else:
                     print("Sorry, please enter a vlaid choice!")
+            global finished_count, unfinished_count
+            if is_finished(edited_task_number):
+                finished_count -= 1
+                unfinished_count += 1
             break
         else: 
             print(f"Sorry, the entered task number({edited_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -233,8 +261,10 @@ def rst():
         with(open("tasks.txt", "w")) as file:
             file.truncate(0)
             print("Reset tasks.txt: Done")
-            global tasks
+            global tasks, finished_count, unfinished_count
             tasks = []
+            finished_count = 0
+            unfinished_count = 0
     except FileNotFoundError: 
         print("No existing tasks file found. Starting with empty task list.")
     except Exception as e:
@@ -243,6 +273,9 @@ def rst():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Finish all tasks Function
 def finish_all():
+    global finished_count, unfinished_count
+    finished_count = len(tasks)
+    unfinished_count = 0
     for task_num in range(len(tasks)):
         tasks[task_num-1][2] = finished_status
     print("All tasks has been finished")
@@ -250,6 +283,9 @@ def finish_all():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Unfinish all tasks Function
 def unfinish_all():
+    global finished_count, unfinished_count
+    finished_count = 0
+    unfinished_count = len(tasks)
     for task_num in range(len(tasks)):
         tasks[task_num-1][2] = not_finished_status
     print("All tasks has been unfinished")
@@ -301,10 +337,40 @@ def edit_note():
     else:
         print(f"Past NOTE: {tasks[task_number - 1][3]}")
         tasks[task_number - 1][3] = input("Enter the new NOTE: ")
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Get counts Function
+def get_counts():
+    index = 0
+    for task in tasks:
+        global finished_count, unfinished_count
+        index += 1
+        if task[2] == finished_status:
+            finished_count += 1
+        elif task[2] == not_finished_status:
+            unfinished_count += 1
+        else:
+            print(f"Issue in task({index})| its status isn't 'Finished' nor 'Not Finished': ({task[2]})")
 
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Status Function: to show number of finished tasks vs unfinished tasks
+def status(): 
+    global finished_count, unfinished_count
+    print(f"Number of All tasks             : {len(tasks)}")
+    print(f"Number of Finished tasks        : {finished_count}")
+    print(f"Number of Not Finished tasks    : {unfinished_count}")
+
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Is Finished Function: returns True if the task is finished
+def is_finished(task_number):
+    if tasks[task_number - 1][2] == finished_status:
+        return True
+    elif tasks[task_number - 1][2] == not_finished_status:
+        return False
+    
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
+get_counts() # counts finished & unfinished tasks
 while True: 
     choice =user_interface()
     if choice == "show": 
@@ -342,6 +408,8 @@ while True:
     elif choice == "edit_note": 
         edit_note()
         save_tasks()
+    elif choice == "status": 
+        status()
     elif choice == "exit":
         break
     else:
