@@ -153,7 +153,7 @@ def finish():
                 print(f"Task({finished_task_number}) is already finished: {tasks[finished_task_number - 1]}")
             else:
                 tasks[finished_task_number - 1][2] = finished_status
-                print(f"The finished task: {tasks[finished_task_number - 1]}, length = {len(tasks[finished_task_number - 1])}")
+                print(f"The finished task: {tasks[finished_task_number - 1]}")
             finished_count += 1
             unfinished_count -= 1
             break
