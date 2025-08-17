@@ -127,15 +127,15 @@ def delete():
     while True:
         deleted_task_number = valid_number("Enter the task(to be deleted) number: ")
         if deleted_task_number <= len(tasks):
-            print(f"The deleted task: {tasks.pop(deleted_task_number - 1)}")
-            with(open("tasks.txt", "w")) as file:
-                file.truncate(0)
-            save_tasks()
             global finished_count, unfinished_count
             if is_finished(deleted_task_number):
                 finished_count -= 1
             else:
                 unfinished_count -= 1
+            print(f"The deleted task: {tasks.pop(deleted_task_number - 1)}")
+            with(open("tasks.txt", "w")) as file:
+                file.truncate(0)
+            save_tasks()
             break
         else: 
             print(f"Sorry, the entered task number({deleted_task_number}) is in-valid. Try {len(tasks)} or less.")
