@@ -20,6 +20,7 @@
 # 2 Counters: first one for finished tasks, second one for unfinished tasks
 # Add status: to show number of finished tasks vs unfinished tasks out of number of all tasks
 # Categorize shown tasks: finished & unfinished
+# Search for a task using a keyword in task (Name, Due Date, Status, or NOTE)
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------- Hello, World! --------------------
@@ -50,9 +51,10 @@ Write (unfinish_all)if you want to unfinish all tasks
 Write (delete)      if you want to delete a specific task 
 Write (edit)        if you want to edit a specific task 
 Write (swap)        if you want to swap 2 tasks
+Write (search)      if you want to search for a task using keyword in task (Name, Due Date, Status, or NOTE)
 Write (rst)         if you want to reset task file (tasks.txt)
 """).strip().lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search"): 
             break
         else: 
             print("Invalid operation. Please, try again")
@@ -366,6 +368,23 @@ def is_finished(task_number):
         return True
     elif tasks[task_number - 1][2] == not_finished_status:
         return False
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Search Funciton
+def search():
+    keyword = input("Enter a keyword: ").strip().lower()
+    found = False
+    count = 1
+    for task in tasks:
+        if keyword in task[0].lower() or keyword in task[1].lower() or keyword in task[2].lower() or keyword in task[3].lower():
+            print(f"\n----------- Task({count}) -----------")
+            print(f"Name: {task[0]}")
+            print(f"Due Date: {task[1]}")
+            print(f"Status: {task[2]}")
+            print(f"NOTE: {task[3]}")
+            found = True
+        count += 1
+    if not found: 
+        print(f"Sorry, there is no any task associated with your keyword ({keyword})")
     
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Main Programe Implementation
@@ -410,6 +429,8 @@ while True:
         save_tasks()
     elif choice == "status": 
         status()
+    elif choice == "search": 
+        search()
     elif choice == "exit":
         break
     else:
