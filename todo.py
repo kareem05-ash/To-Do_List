@@ -22,6 +22,9 @@
 # Categorize shown tasks: finished & unfinished
 # Search for a task using a keyword in task (Name, Due Date, Status, or NOTE)
 # Show the next Not Finished task (highest priority)
+# Delete all finished tasks
+
+# Undo the previous operation
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # -------------------- Hello, World! --------------------
@@ -38,23 +41,25 @@ def user_interface():
     while True: 
         choice = input("""
 -------------------- Choose Operation --------------------
-Write (exit)        if you want to exit from the program
-Write (show)        if you want to show your tasks 
-Write (status)      if you want to show number of all, finished, and unfinished tasks
-Write (show_task)   if you want to show a specific task 
-Write (next)        if you want to show the next Not Finished task (to be done first)
-Write (add)         if you want to add a task 
-Write (add_note)    if you want to add a NOTE to an existing task
-Write (edit_note)   if you want to edit the NOTE of an existing task
-Write (finish)      if you want to finish a task 
-Write (finish_all)  if you want to finish all tasks
-Write (unfinish)    if you want to unfinish a task 
-Write (unfinish_all)if you want to unfinish all tasks
-Write (delete)      if you want to delete a specific task 
-Write (edit)        if you want to edit a specific task 
-Write (swap)        if you want to swap 2 tasks
-Write (search)      if you want to search for a task using keyword in task (Name, Due Date, Status, or NOTE)
-Write (rst)         if you want to reset task file (tasks.txt)
+Write (exit)            if you want to exit from the program
+Write (show)            if you want to show your tasks 
+Write (status)          if you want to show number of all, finished, and unfinished tasks
+Write (show_task)       if you want to show a specific task 
+Write (next)            if you want to show the next Not Finished task (to be done first)
+Write (add)             if you want to add a task 
+Write (add_note)        if you want to add a NOTE to an existing task
+Write (edit_note)       if you want to edit the NOTE of an existing task
+Write (finish)          if you want to finish a task 
+Write (finish_all)      if you want to finish all tasks
+Write (unfinish)        if you want to unfinish a task 
+Write (unfinish_all)    if you want to unfinish all tasks
+Write (delete)          if you want to delete a specific task 
+Write (delete_finished) if you want to delete all finished tasks
+Write (edit)            if you want to edit a specific task 
+Write (swap)            if you want to swap 2 tasks
+Write (undo)            if you want to undo the previous operation
+Write (search)          if you want to search for a task using keyword in task (Name, Due Date, Status, or NOTE)
+Write (rst)             if you want to reset task file (tasks.txt)
 """).strip().lower()
         if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search", "next"): 
             break
@@ -408,6 +413,25 @@ def search():
     if not found: 
         print(f"Sorry, there is no any task associated with your keyword ({keyword})")
     
+# # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# # Undo the previous operation Function
+# def undo():
+    
+        
+# # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# # Save the previous operation Function
+# def save_prev():
+
+
+# # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# # Delete all finished tasks Function
+# def delete_finished():
+#     count = 0   # index of the task
+#     for task in tasks:
+#         if task[2] == finished_status:
+#             tasks.pop(count)
+#     print("All finished were deleted successfully.")
+        
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
@@ -455,6 +479,9 @@ while True:
         search()
     elif choice == "next":
         show_next()
+    # elif choice == "delete_finished": 
+    #     delete_finished()
+    #     save_tasks()
     elif choice == "exit":
         break
     else:
