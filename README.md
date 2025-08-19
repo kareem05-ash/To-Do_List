@@ -56,7 +56,7 @@ This section shows a real world test scenarios to verify functionality of the ap
 
 ### Main Menue
 Just after `python todo.py`, this menue appears to choose operation: 
-
+  
 ![Main Menue](./Docs/main_menue.png)
 
 ### ➕ Add a New Task
