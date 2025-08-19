@@ -37,7 +37,10 @@ To-Do_List/
 - 📝 Edit existing tasks (update name, due date, or NOTE).
 - ✅ Mark tasks as **finished** or 🔄 **unfinished**.
 - ❌ Delete a task by its number in your task list. (heighest priority : number (1))
+- ❌ Delete all finished tasks
+- ↩️ Undo the previous operation. To avoid edition, deletition, ... by accident
 - 👀 Show all tasks. Seperate **Finished** & **Not Finished** for clarity.
+- 👀 Show the next task to be done (The next unfinished task).
 - 🔍 Search tasks by keyword in task (Name, Due Date, Status, or NOTE).
 - 🔢 Show a specific task by its number in your task list.
 - 🔀 Swap two tasks to reorder them (Custom Priority).
