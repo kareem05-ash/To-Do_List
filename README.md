@@ -1,6 +1,6 @@
 # (و ما توفيقى إلا بالله)
 # 🧠 To-Do List App using Python 
-![Python](https://img.shields.io/badge/python-3.8+-blue.svg) ![MIT LICENSE](https://img.shields.io/badge/license-MIT-green.svg) 
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg) ![MIT LICENSE](https://img.shields.io/badge/license-MIT-green.svg) [LICENSE](./LICENSE)
 
 To-Do List CLI Application is a powerful task manager built with **Python**. It allows users to create, edit, organize, and track their daily tasks directly from the command line.         
 
