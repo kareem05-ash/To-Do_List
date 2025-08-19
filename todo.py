@@ -61,7 +61,7 @@ Write (undo)            if you want to undo the previous operation
 Write (search)          if you want to search for a task using keyword in task (Name, Due Date, Status, or NOTE)
 Write (rst)             if you want to reset task file (tasks.txt)
 """).strip().lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search", "next"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search", "next", "delete_finished"): 
             break
         else: 
             print("Invalid operation. Please, try again")
@@ -423,15 +423,18 @@ def search():
 # def save_prev():
 
 
-# # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# # Delete all finished tasks Function
-# def delete_finished():
-#     count = 0   # index of the task
-#     for task in tasks:
-#         if task[2] == finished_status:
-#             tasks.pop(count)
-#     print("All finished were deleted successfully.")
-        
+# --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+# Delete all finished tasks Function
+def delete_finished():
+    global finished_count
+    for count in range(len(tasks)-1, -1, -1):       # Looping backward over the list to avoid index mismatches
+        if tasks[count][2] == finished_status:      # if the task is finished
+            tasks.pop(count)                        # delete this task from the end
+    with(open("tasks.txt", "w")) as file: 
+        file.truncate(0)                            # rst the file
+    save_tasks()                                    # resave the task list into the file(tasks.txt)
+    finished_count = 0                              # rst the fnished tasks counter
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Main Programe Implementation
 load_tasks() # load task list with the saved tasks in (tasks.txt)
@@ -479,9 +482,8 @@ while True:
         search()
     elif choice == "next":
         show_next()
-    # elif choice == "delete_finished": 
-    #     delete_finished()
-    #     save_tasks()
+    elif choice == "delete_finished": 
+        delete_finished()
     elif choice == "exit":
         break
     else:
