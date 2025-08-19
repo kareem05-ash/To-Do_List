@@ -23,7 +23,6 @@
 # Search for a task using a keyword in task (Name, Due Date, Status, or NOTE)
 # Show the next Not Finished task (highest priority)
 # Delete all finished tasks
-
 # Undo the previous operation
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
