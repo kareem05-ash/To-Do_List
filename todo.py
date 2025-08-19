@@ -30,10 +30,14 @@
 # -------------------- Hello, World! --------------------
 print("Hello, World!")
 tasks = []  # Task List
+undo_index = 0
+undo_index2 = 0     # this is for swap operation
+undo_list = 0
 finished_count = 0
 unfinished_count = 0
 not_finished_status = "Not Finished"
 finished_status = "Finished"
+choice = "this is the first operaion"   # to store the previous operation
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # User Interface Funtion
@@ -61,7 +65,7 @@ Write (undo)            if you want to undo the previous operation
 Write (search)          if you want to search for a task using keyword in task (Name, Due Date, Status, or NOTE)
 Write (rst)             if you want to reset task file (tasks.txt)
 """).strip().lower()
-        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search", "next", "delete_finished"): 
+        if choice in ("show", "add", "delete", "finish", "unfinish", "show_task", "edit", "swap", "exit", "rst", "finish_all", "unfinish_all", "add_note", "edit_note", "status", "search", "next", "delete_finished", "undo"): 
             break
         else: 
             print("Invalid operation. Please, try again")
@@ -70,8 +74,9 @@ Write (rst)             if you want to reset task file (tasks.txt)
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Add a new task Function
 def add():
-    global unfinished_count
+    global unfinished_count, undo_index, undo_list
     unfinished_count += 1
+    undo_index = len(tasks)
     task = [(input("Enter Task Name: "))]
     task.append((input("Enter Task Due Date: ")))
     task.append(not_finished_status)
@@ -153,10 +158,12 @@ def show_next():
 # -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
 # Delete a specific task Function
 def delete():  
+    global undo_index, undo_list, finished_count, unfinished_count
     while True:
         deleted_task_number = valid_number("Enter the task(to be deleted) number: ")
         if deleted_task_number <= len(tasks):
-            global finished_count, unfinished_count
+            undo_index = deleted_task_number - 1  
+            undo_list = tasks[undo_index]
             if is_finished(deleted_task_number):
                 finished_count -= 1
             else:
@@ -164,7 +171,6 @@ def delete():
             print(f"The deleted task: {tasks.pop(deleted_task_number - 1)}")
             with(open("tasks.txt", "w")) as file:
                 file.truncate(0)
-            save_tasks()
             break
         else: 
             print(f"Sorry, the entered task number({deleted_task_number}) is in-valid. Try {len(tasks)} or less.")
@@ -172,10 +178,11 @@ def delete():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Finish a specific task Funciton
 def finish(): 
+    global finished_count, unfinished_count, undo_index, undo_list
     while True:
         finished_task_number = valid_number("Enter the task(to be finished) number: ")
         if finished_task_number <= len(tasks):
-            global finished_count, unfinished_count
+            undo_index = finished_task_number - 1
             if tasks[finished_task_number - 1][2] == finished_status:
                 print(f"Task({finished_task_number}) is already finished: {tasks[finished_task_number - 1]}")
             else:
@@ -190,10 +197,11 @@ def finish():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Unfinishe a specific task Funciton
 def unfinish(): 
+    global finished_count, unfinished_count, undo_index, undo_list
     while True: 
         unfinished_task_number = valid_number("Enter the task(to be unfinished) number: ")
         if unfinished_task_number <= len(tasks): 
-            global finished_count, unfinished_count
+            undo_index = unfinished_task_number - 1
             if tasks[unfinished_task_number - 1][2] == not_finished_status:
                 print(f"Task({unfinished_task_number}) is already unfinished: {tasks[unfinished_task_number - 1]}")
             else:
@@ -208,12 +216,15 @@ def unfinish():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Edit a specific task Function
 def edit():
+    global undo_index, undo_list
     while True:
         edited_task_number = valid_number("Enter the task(to be edited) number: ")
         if edited_task_number <= len(tasks): 
-            print("The task to be edited:")
+            print(f"The task to be edited: Task({edited_task_number})")
             task = tasks[edited_task_number - 1]
-            print(f"Task({edited_task_number}): {task[0]}")
+            undo_index = edited_task_number - 1
+            undo_list = task
+            print(f"Name: {task[0]}")
             print(f"Due Date: {task[1]}")
             print(f"Status: {task[2]}")
             print(f"NOTE: {task[3]}\n")
@@ -241,6 +252,7 @@ def edit():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Swap 2 tasks Funciton
 def swap():
+    global undo_index, undo_index2
     while True: 
         first_task_number = valid_number("Enter the first task(to be swapped) number: ")
         second_task_number = valid_number("Enter the second task(to be swapped) number: ")
@@ -248,6 +260,8 @@ def swap():
             print(f"Sorry, you've entered the same number for both. task({first_task_number}), task({second_task_number}). Try different 2 numbers up to {len(tasks)}")
         elif first_task_number <= len(tasks) and second_task_number <= len(tasks): 
             # temporary list stores the first task
+            undo_index = first_task_number - 1
+            undo_index2 = second_task_number - 1
             temp = tasks[first_task_number - 1]     
             # swapping
             tasks[first_task_number - 1] = tasks[second_task_number - 1]
@@ -286,11 +300,16 @@ def load_tasks():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Reset task file Function
 def rst():
+    global tasks, finished_count, unfinished_count, undo_list, undo_index, undo_index2
     try:
         with(open("tasks.txt", "w")) as file:
             file.truncate(0)
             print("Reset tasks.txt: Done")
-            global tasks, finished_count, unfinished_count
+            # stores the old values for undo operation
+            undo_list = tasks
+            undo_index = finished_count
+            undo_index2 = unfinished_count
+            # rst all variables
             tasks = []
             finished_count = 0
             unfinished_count = 0
@@ -302,7 +321,14 @@ def rst():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Finish all tasks Function
 def finish_all():
-    global finished_count, unfinished_count
+    global finished_count, unfinished_count, undo_list, undo_index, undo_index2
+    # store values for undo operation
+    undo_index = finished_count
+    undo_index2 = unfinished_count
+    for task_num in range(len(tasks)):
+        if tasks[task_num-1][2] == not_finished_status:
+            undo_list.append(task_num-1)
+    # finish all tasks
     finished_count = len(tasks)
     unfinished_count = 0
     for task_num in range(len(tasks)):
@@ -312,7 +338,14 @@ def finish_all():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Unfinish all tasks Function
 def unfinish_all():
-    global finished_count, unfinished_count
+    global finished_count, unfinished_count, undo_list, undo_index, undo_index2
+    # store values for undo operation
+    undo_index = finished_count
+    undo_index2 = unfinished_count
+    for task_num in range(len(tasks)):
+        if tasks[task_num-1][2] == finished_status:
+            undo_list.append(task_num-1)
+    # unfinish all tasks
     finished_count = 0
     unfinished_count = len(tasks)
     for task_num in range(len(tasks)):
@@ -333,7 +366,12 @@ def valid_number(msg):
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Add NOTE Function
 def add_note():
+    global undo_list, undo_index
     task_number = valid_number("Enter the task(to be noted) number: ")
+    # stores old values for undo operation
+    undo_index = task_number - 1
+    undo_list.append(tasks[undo_index][3])
+    # add new note
     if tasks[task_number - 1][3] != "NONE":
         print(f"This task is already noted with: {tasks[task_number - 1][3]}")
         while True:
@@ -351,7 +389,12 @@ def add_note():
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Edit NOTE Function
 def edit_note():
+    global undo_list, undo_index
     task_number = valid_number("Enter the task(to edit its NOTE) number: ")
+    # stores old values for undo operation
+    undo_index = task_number - 1
+    undo_list.append(tasks[undo_index][3])
+    # edit note
     if tasks[task_number - 1][3] == "NONE":
         while True:
             decision = print("This task hasn't NOTE to be edited. Do you want to add a NOTE? (y/n) ")
@@ -415,13 +458,68 @@ def search():
     
 # # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # # Undo the previous operation Function
-# def undo():
-    
-        
-# # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-# # Save the previous operation Function
-# def save_prev():
-
+def undo():
+    global finished_count, unfinished_count, tasks
+    if choice_prev == "add": 
+        # delete the added task
+        tasks.pop(undo_index)     
+        # decrement the unfinished tasks counter
+        unfinished_count -= 1
+    elif choice_prev == "delete": 
+        # insert the deleted task
+        tasks.insert(undo_index, undo_list) 
+        if undo_list[2] == finished_status:         # the task was finished first
+            finished_count += 1                     # increment the finished task counter
+        elif undo_list[2] == not_finished_status:   # the task was not finised first
+            unfinished_count += 1   
+    elif choice_prev == "finish": 
+        # unfinish task
+        tasks[undo_index][2] = not_finished_status
+        finished_count -= 1
+        unfinished_count += 1
+    elif choice_prev == "unfinish":
+        # finish task
+        tasks[undo_index][2] = finished_status
+        finished_count += 1
+        unfinished_count -= 1
+    elif choice_prev == "edit": 
+        # edit the task again to assign the old data
+        tasks[undo_index] = undo_list
+        # if the task was finished, rehandle the status counters
+        if undo_list[2] == finished_status: 
+            finished_count -= 1
+            unfinished_count += 1
+    elif choice_prev == "swap": 
+        # temp list
+        temp = tasks[undo_index]
+        # swap the 2 tasks again
+        tasks[undo_index] = tasks[undo_index2]
+        tasks[undo_index2] = temp
+    elif choice_prev == "rst": 
+        # assign the stoerd task list to tasks again
+        tasks = undo_list
+        # rehandle status counters
+        finished_count = undo_index     # the first index holds the number of finished tasks
+        unfinished_count = undo_index2  # the second index holds the number of not finished tasks
+    elif choice_prev == "finish_all": 
+        # unfinish all tasks (which were unfinished first)
+        for index in undo_list: 
+            tasks[index][2] = not_finished_status
+        # rehandle status counters
+        finished_count = undo_index     # the first index holds the number of finished tasks
+        unfinished_count = undo_index2  # the second index holds the number of not finished tasks
+    elif choice_prev == "unfinish_all": 
+        # finish all tasks (which were finished first)
+        for index in undo_list: 
+            tasks[index][2] = finished_status
+        # rehandle status counters
+        finished_count = undo_index     # the first index holds the number of finished tasks
+        unfinished_count = undo_index2  # the second index holds the number of not finished tasks
+    elif choice_prev == "edit_note" or choice_prev == "add_note": 
+        # restore the previous note of the dedicated task
+        tasks[undo_index][3] = undo_list[0]
+    else:   # if the previous operation wasn't of the listed previously operations
+        print(f"The previous operaiton ({choice_prev}) didn't change task list")
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Delete all finished tasks Function
@@ -432,7 +530,6 @@ def delete_finished():
             tasks.pop(count)                        # delete this task from the end
     with(open("tasks.txt", "w")) as file: 
         file.truncate(0)                            # rst the file
-    save_tasks()                                    # resave the task list into the file(tasks.txt)
     finished_count = 0                              # rst the fnished tasks counter
 
 # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -440,7 +537,8 @@ def delete_finished():
 load_tasks() # load task list with the saved tasks in (tasks.txt)
 get_counts() # counts finished & unfinished tasks
 while True: 
-    choice =user_interface()
+    choice_prev = choice        # update choice 
+    choice = user_interface()
     if choice == "show": 
         show()
     elif choice == "show_task": 
@@ -456,6 +554,7 @@ while True:
         save_tasks()
     elif choice == "delete": 
         delete()
+        save_tasks()
     elif choice == "edit": 
         edit()
         save_tasks()
@@ -484,6 +583,10 @@ while True:
         show_next()
     elif choice == "delete_finished": 
         delete_finished()
+        save_tasks()
+    elif choice == "undo": 
+        undo()
+        save_tasks()
     elif choice == "exit":
         break
     else:
